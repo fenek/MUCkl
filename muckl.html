@@ -6,7 +6,7 @@
     <title>MUCkl</title>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
-    <script src="config.js"></script>
+    <script src="config.js.php"></script>
     <script src="shared.js"></script>
     <script src="browsercheck.js"></script>
     <script src="sounds.js"></script>
@@ -531,6 +531,8 @@ function handleConnected() {
   roster = new Roster();
   jid = con.jid;
   Debug.log("jid: "+jid);
+  if(nick == 0)
+    nick = jid.split("@")[0];
 
   var aRoom = '';
   if (passedArgs['room'] && ROOMS[passedArgs['room']])
@@ -608,6 +610,8 @@ function init() {
     con = new JSJaCHttpPollingConnection(oArg);
   else if (BACKENDTYPE=='binding')
     con = new JSJaCHttpBindingConnection(oArg);
+  else if (BACKENDTYPE=='websockets')
+    con = new JSJaCWebSocketConnection(oArg);
   else {
     alert('unknown backend type. aborting...');
     return;
@@ -685,7 +689,7 @@ if (nick && nick.match(/^\s*(\S+|\S+.*\S+)\s*$/))
   // skip blanks
   nick = RegExp.$1;
 else {
-  alert("Nickname missing or invalid!\nUsing default nick...");
+  //alert("Nickname missing or invalid!\nUsing default nick...");
   nick = MUCKLNICK; // make sure to use some predefined default
 }
 
